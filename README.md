@@ -836,6 +836,8 @@ per vedere errori incontrati durante l'esecuzione, se l'applicazione è andata a
 
 # TESTING
 
+Lo script **testSample.py**, uno script Python che conta il numero di occorrenze di ciascun carattere all'interno di un file di caratteri random Base64, è stato submittato a Spark con diverse configurazioni del cluster e sono stati registrati i tempi di esecuzione dell'applicazione.
+
 Test | Instance Type | N. Instances | File Size | N. Executors | Execution Time
 ---- | ------------- | ------------ | --------- | ------------ | -------------- 
 1 | r5.large | 32 | 9.4 GB | 32 | 5mins, 1sec
