@@ -461,7 +461,11 @@ Aggiungiamo alle variabili d'ambiente anche terraform. Eseguire i passaggi:
 1. eseguire il comando:
 - sudo nano /etc/environment
 2. Aggiungere alla fine della stringa PATH il valore:
-- :/home/ubuntu/Terraform       (i : due punti sono necessari per dividere due path tra loro)
+
+```
+:/home/ubuntu/Terraform       (i : due punti sono necessari per dividere due path tra loro)
+```
+
 3. Dopo aver salvato eseguire:
 - source /etc/environment
 
