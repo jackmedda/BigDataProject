@@ -152,13 +152,16 @@ Impostare sicurezza sulla chiave:
 - sudo nano /etc/hosts
 Scrivere dentro:
 
+```
 PRIVATE_IP_NAMENODE namenode
 PRIVATE_IP_NAMENODE datanode1
+```
 
 ### Configurare SSH
 - nano /home/ubuntu/.ssh/config
 E scrivere dentro:
 
+```
 Host namenode
 HostName namenode
 User ubuntu
@@ -167,7 +170,7 @@ Host datanode1
 HostName namenode
 User ubuntu
 IdentityFile /home/ubuntu/.ssh/my-key.pem
-
+```
 
 ## Aggiornare i package nella macchina e installare Java:
 - sudo apt-get update && sudo apt-get dist-upgrade
@@ -182,8 +185,10 @@ IdentityFile /home/ubuntu/.ssh/my-key.pem
 
 E scrivere dentro:
 
+```
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/ubuntu/hadoop/bin:/home/ubuntu/hadoop/sbin"
 JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+```
 
 - source /etc/environment
 
@@ -191,10 +196,12 @@ JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
 
 E scrivere dentro:
 
+```
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 export PATH=$PATH:$JAVA_HOME/bin
 export HADOOP_HOME=/home/ubuntu/hadoop
 export HADOOP_CONF_DIF=/home/ubuntu/hadoop/etc/hadoop
+```
 
 - source /home/ubuntu/.profile
 
@@ -205,6 +212,7 @@ ma non va riscritto perché è già presente nei file.
 - nano $HADOOP_CONF_DIF/hdfs-site.xml
 E scrivere dentro:
 
+```
 <configuration>
   <property>
     <name>dfs.namenode.name.dir</name>
@@ -219,20 +227,24 @@ E scrivere dentro:
     <value>2</value>
   </property>
 </configuration>
+```
 
 - nano $HADOOP_CONF_DIF/core-site.xml
 E scrivere dentro:
 
+```
 <configuration>
   <property>
     <name>fs.default.name</name>
     <value>hdfs://namenode:9000</value>
   </property>
 </configuration>
+```
 
 - nano $HADOOP_CONF_DIF/yarn-site.xml
 E scrivere dentro:
 
+```
 <configuration>
   <property>
     <name>yarn.nodemanager.aux-services</name>
@@ -251,10 +263,12 @@ E scrivere dentro:
     <value>false</value>
   </property>
 </configuration>
+```
 
 - nano $HADOOP_CONF_DIF/mapred-site.xml
 E scrivere dentro:
 
+```
 <configuration>
     <property>
         <name>mapreduce.framework.name</name>
@@ -273,19 +287,24 @@ E scrivere dentro:
         <value>HADOOP_MAPRED_HOME=${HADOOP_HOME}</value>
     </property>
 </configuration>
+```
 
 - nano $HADOOP_CONF_DIF/masters
 Scrivere dentro:
 
+```
 namenode
+```
 
 - nano $HADOOP_CONF_DIF/workers
 IMPORTANTE: cancellare localhost (dato che datanode1 conterrà lo stesso valore, localhost e datanode1 insieme NO, uno dei due)
 Scrivere dentro:
 
+```
 datanode1
+```
 
-w
+
 IMPORTANTE: Affinché Hadoop funzioni correttamente la sua configurazione dev'essere identica per tutti i nodi, quindi anche i nodi dentro
 il file "workers" soprastante deve essere identico per ogni macchina.
 
@@ -298,16 +317,20 @@ il file "workers" soprastante deve essere identico per ogni macchina.
 - sudo nano spark/conf/spark-env.sh
 Scrivere dentro:
 
+```
 export SPARK_MASTER_HOST=namenode
 export HADOOP_CONF_DIR="/home/ubuntu/hadoop/etc/hadoop"
 export PYSPARK_PYTHON="/usr/bin/python3"
+```
 
 Creare il file "slaves" per avviare tutti gli slaves con unico comando:
 
 - nano spark/conf/slaves
 Scrivere dentro:
 
+```
 datanode1
+```
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -319,9 +342,7 @@ A questo punto la guida si divide in 2:
    automaticamente i file di configurazione con i dati delle istanze generate da Terraform
 
 
-# Copia AMI (SE VOLETE FARE QUESTO CREERÀ UNO SNAPSHOT CHE SE SUPERA 1GB AVRÀ UN COSTO,
-		MA VELOCIZZA IL PROCESSO FACENDO UN'ALTRA ISTANZA SULLA COPIA DEL PRIMO,
-		PER EVITARLO CREARE MANUALMENTE UN'ALTRA ISTANZA E FARE TUTTI I PASSAGGI PRECEDENTI)
+# Copia AMI (SE VOLETE FARE QUESTO CREERÀ UNO SNAPSHOT CHE SE SUPERA 1GB AVRÀ UN COSTO, MA VELOCIZZA IL PROCESSO FACENDO UN'ALTRA ISTANZA SULLA COPIA DEL PRIMO, PER EVITARLO CREARE MANUALMENTE UN'ALTRA ISTANZA E FARE TUTTI I PASSAGGI PRECEDENTI)
 
 Andare su EC2 Instances su AWS Console e cliccare il tasto destro sull'istanza -> Image -> Create Image
 Scegliere un nome per l'immagine a piacimento e confermare cliccando "Create Image"
@@ -349,7 +370,9 @@ Quindi eseguire il comando:
 - sudo nano /etc/hosts
 Aggiungere dentro:
 
+```
 PRIVATE_IP_DATANODE2 datanode2
+```
 
 (ATTENZIONE ## namenode e datanode1 coincidono con namenode in AWS, datanode2 coincide con datanode2 in AWS)
 
@@ -357,22 +380,28 @@ Successivamente modificare la configurazione SSH:
 - nano /home/ubuntu/.ssh/config
 E aggiungere dentro:
 
+```
 Host datanode2
 HostName datanode2
 User ubuntu
 IdentityFile /home/ubuntu/.ssh/my-key.pem
+```
 
 Poi modificare i workers di hadoop:
 - nano $HADOOP_CONF_DIF/workers
 E aggiungere dentro:
 
+```
 datanode2
+```
 
 Infine SOLO SUL MASTER aggiungere datanode2:
 - nano spark/conf/slaves
 E aggiungere dentro:
 
+```
 datanode2
+```
 
 
 Per testare il funzionamento  di SSH (chiudere ogni connessione con CTRL-D dopo esservi connessi):
@@ -432,7 +461,7 @@ Creiamo il file di configurazione per terraform:
 
 E scrivere dentro:
 
-
+```
 provider "aws" {
   profile = "default"
   region = "REGION"
@@ -447,11 +476,12 @@ resource "aws_instance" "testInstances" {
    ]
    count = NUM_INSTANCES
 }
-
+```
 
 I nomi in maiuscolo sono da sostituire con i valori della vostra configurazione. count è il numero di istanze da creare.
 Un file main.tf d'esempio può essere:
 
+```
 provider "aws" {
   profile = "default"
   region = "us-east-1"
@@ -466,7 +496,7 @@ resource "aws_instance" "testInstances" {
    ]
    count = 2
 }
-
+```
 
 Salvare il file.
 
@@ -491,11 +521,12 @@ Tornare sulla shell del master namenode ed eseguire il comando:
 
 E inserire i dati uno per uno come in questo esempio:
 
+```
 AWS Access Key ID [None]: PRESENTE NEL CSV SCARICATO COME AWSAccessKeyId
 AWS Secret Access Key [None]: PRESENTE NEL CSV SCARICATO COME AWSSecretKey
 Default region name [None]: REGION (es. us-east-1)
 Default output format [None]: json
-
+```
 
 Terraform troverà automaticamente le credenziali per accedere alle risorse del nostro account AWS
 
@@ -529,7 +560,9 @@ A questo file bisogna aggiungere gli indirizzi privati delle istanze create con 
 
 e aggiungere dentro:
 
+```
 PRIVATE_IP datanode*       (* va sostituito con un numero, per esempio datanode2, datanode3 ecc.)
+```
 
 da scrivere per ciascuna istanza creata.
 
@@ -539,10 +572,12 @@ File di configurazione di SSH:
 
 e aggiungere dentro:
 
+```
 Host datanode*          (* va sostituito con un numero, per esempio datanode2, datanode3 ecc.)
 HostName datanode*
 User ubuntu
 IdentityFile /home/ubuntu/.ssh/my-key.pem
+```
 
 da scrivere per ciascuna istanza creata.
 
@@ -552,7 +587,9 @@ File di configurazione di hadoop:
 
 e aggiungere dentro:
 
+```
 datanode*          (* va sostituito con un numero, per esempio datanode2, datanode3 ecc.)
+```
 
 da scrivere per ciascuna istanza creata.
 
@@ -562,7 +599,9 @@ File di configurazione di hadoop:
 
 e aggiungere dentro:
 
+```
 datanode*          (* va sostituito con un numero, per esempio datanode2, datanode3 ecc.)
+```
 
 da scrivere per ciascuna istanza creata.
 
@@ -582,7 +621,7 @@ Modificare il file main.tf:
 
 e il contenuto del file dovrà essere:
 
-
+```
 provider "aws" {
   profile = "default"
   region = "REGION"
@@ -611,7 +650,7 @@ resource "null_resource" "testInstances" {
       on_failure = continue
    }
 }
-
+```
 
 Bisogna sostituire MY-KEY col nome della propria chiave privata SSH, NUM_INSTANCES col numero delle istanze,
 INDEX_START con l'indice da cui partono i datanodes, ovvero con un valore pari a 7 i nodi si chiameranno "datanode7", "datanode8", "datanode9" e così via
@@ -625,7 +664,7 @@ Questa configurazione fa uso di due file "clusterSetup.sh" e "clusterClean.sh" c
 
 e scriviamo dentro:
 
-
+```bash
 #!/bin/bash
 
 cat /etc/hosts > /home/ubuntu/.tmpHosts
@@ -641,14 +680,14 @@ for i in ${IPs[@]}; do
     echo "datanode${index}" | sudo tee -a /home/ubuntu/spark/conf/slaves
     index=$((index + 1))
 done
-
+```
 
 per il secondo file:
 - nano clusterClean.sh
 
 e scriviamo dentro:
 
-
+```bash
 #!/bin/bash
 
 n_datanodes=$2
@@ -664,7 +703,7 @@ sudo echo "datanode1" > /home/ubuntu/spark/conf/slaves
 sudo mv /home/ubuntu/.tmpHosts /etc/hosts
 sudo mv /home/ubuntu/.tmpSSHConfig /home/ubuntu/.ssh/config
 sudo rm -r /tmp/*
-
+```
 
 
 Salviamo e diamo tutti i permessi ai file con:
@@ -688,7 +727,7 @@ Per farlo possiamo creare un nuovo script a piacere (ex. updateDatanodes.sh):
 
 e scriviamo dentro:
 
-
+```bash
 #!/bin/bash
 
 n_datanodes=$2
@@ -698,7 +737,7 @@ for ((i=$1;i<END;i++)); do
     cat /home/ubuntu/hadoop/etc/hadoop/workers | ssh -oStrictHostKeyChecking=no datanode$i "sudo sh -c 'cat >/home/ubuntu/hadoop/etc/hadoop/workers'"
     cat /home/ubuntu/.ssh/config | ssh -oStrictHostKeyChecking=no datanode$i "sudo sh -c 'cat >/home/ubuntu/.ssh/config'"
 done
-
+```
 
 Salviamo e diamo tutti i permessi al file con:
 - chmod 777 updateDatanodes.sh
@@ -818,7 +857,9 @@ Per specificare il numero di nodi (executors) aggiungere il parametro "--num-exe
 
 In caso di errore (pyspark module not found) sull'oggetto restituito da SparkConf() aggiungere:
 
-- .set('spark.yarn.dist.files','/home/ubuntu/spark/python/lib/pyspark.zip,/home/ubuntu/spark/python/lib/py4j-0.10.7-src.zip').setExecutorEnv('PYTHONPATH','pyspark.zip:py4j-0.10.7-src.zip')
+```
+.set('spark.yarn.dist.files','/home/ubuntu/spark/python/lib/pyspark.zip,/home/ubuntu/spark/python/lib/py4j-0.10.7-src.zip').setExecutorEnv('PYTHONPATH','pyspark.zip:py4j-0.10.7-src.zip')
+```
 
 ESEMPIO: SparkConf().set('spark.yarn.dist.......ECC
 
