@@ -1,7 +1,11 @@
 # BigDataProject
 A guide to create a cluster of AWS EC2 Instances configured with Apache Hadoop and Apache Spark. AWS Organization is also explained to create a cluster of instances shared by multiple accounts. Terraform configuration is also described with the use of some bash scripts to automate the creation of the instances of the cluster and their configuration.
 
-_______CREAZIONE DI UNA ORGANIZZAZIONE, VPC E SUBNET PRIVATE, CONDIVISIONE DELLA SUBNET_______
+
+
+GUIDE (ITALIAN VERSION, it can be found inside "Guida_Istanze.txt"
+
+# _______CREAZIONE DI UNA ORGANIZZAZIONE, VPC E SUBNET PRIVATE, CONDIVISIONE DELLA SUBNET_______
 
 
 
@@ -26,12 +30,12 @@ altrimenti contattare AWS Support). Per invitare:
 3. Inserire l'indirizzo email o l'ID dell'account AWS. Per inserire più account separarli con una virgola
 4. (inserire Note opzionali) Cliccare "Invite"
 
-# Abilitazione condivisione risorse
+## Abilitazione condivisione risorse
 
 - Ora bisogna abilitare la condivisione delle risorse nell'organizzazione, effettuabile al link https://console.aws.amazon.com/ram/home?region=us-east-1#Settings
 (nel caso siate nella regione "us-east-1"), spuntare la casella su "Enable sharing within your AWS Organization" e confermare con "Save settings"
 
-# Creazione VPC
+## Creazione VPC
 
 Selezionare la voce "VPC" all'interno del gruppo "Reti E Distribuzione Di Contenuti", accessibile dal menù "Servizi" in console e:
 1.  Cliccare su Launch VPC Wizard e cliccare su Select, il quale apparirà nella pagine dello wizard
@@ -46,7 +50,7 @@ Selezionare la voce "VPC" all'interno del gruppo "Reti E Distribuzione Di Conten
 
 A questo punto abbiamo la nostra subnet dentro cui possiamo creare le nostre istanze ed essere certi che esse possano comunicare direttamente tramite IPv4 privati.
 
-# Creazione di una condivisione di risorsa
+## Creazione di una condivisione di risorsa
 
 Dal menù "Servizi" selezionare "Resource Access Manager" all'interno del gruppo "Sicurezza, Identità, Conformità".
 Una volta fatto eseguire i seguenti passaggi per condividere la subnet con i membri della propria organizzazione:
@@ -59,7 +63,7 @@ Una volta fatto eseguire i seguenti passaggi per condividere la subnet con i mem
    qualche minuto prima che sia disponibile.
 
 
-# Preparazione alla creazione delle istanze
+## Preparazione alla creazione delle istanze
 
 Dal menù "Servizi" selezioniamo "EC2" nel gruppo "Calcolo":
 - Selezioniamo la voce "Instances" dal menù a sinistra e clicchiamo il pulsante "Launch Instance", a questo punto inizia la parte successiva
@@ -67,7 +71,7 @@ Dal menù "Servizi" selezioniamo "EC2" nel gruppo "Calcolo":
 
 
 
-_________CREAZIONE DI DUE ISTANZE AWS CON HADOOP 3.1.3 E SPARK 2.4.4__________
+# _________CREAZIONE DI DUE ISTANZE AWS CON HADOOP 3.1.3 E SPARK 2.4.4__________
 
 
 
@@ -90,14 +94,14 @@ Una volta cliccato il pulsante "Launch Instance" bisogna:
     poi cliccate su "Download Key Pair" che scaricherà la chiave privata con estensione ".pem" che vi permetterà di accedere alle istanze via SSH.
     Cliccate "Launch Instances" per confermare.
 
-# Settaggio nome nuova istanza
+## Settaggio nome nuova istanza
 
 Ora le istanze sono state create e bisogna tornare nela sezione "Instances", qui vedremo la nostra istanza senza nome, quindi clccate sulla matita che appare
 quando vi avvicinate allo spazio vuoto sotto la colonna "Name" e inserite "namenode" come nome, questo sarà il master del nostro cluster
 
 NOTA: le istanze possono essere stoppate e startate selezionandole e cliccando su "Actions -> Instance State -> Stop". Il comando "Terminate" elimina permanentemente l'istanza.
 
-# Modifica Security Group
+## Modifica Security Group
 
 Dal menù a sinistra andate in basso fino al gruppo "NETWORK & SECURITY" e selezionate la voce "Security Groups":
 1. Selezionare la casella a fianco al security group col nome che è stato scelto durante la creazione dell'istanza
@@ -107,7 +111,7 @@ Dal menù a sinistra andate in basso fino al gruppo "NETWORK & SECURITY" e selez
 4. Scegliere "All traffic" come Type e in Source selezionare "Custom" e scrivere il CIDR scelto per la subnet (es. 10.0.0.0/24)
 5. In basso cliccate su "Save rules"
 
-# Ulteriori concetti sulla condivisione dell'AMI e delle key pairs
+## Ulteriori concetti sulla condivisione dell'AMI e delle key pairs
 
 Adesso avete la chiave privata per accedere tramite SSH alle istanze con un estensione ".pem".
 Nel caso in cui vogliate che gli altri utenti dell'organizzazione utilizzino la stessa chiave per le loro macchine dovete inviare loro la chiave privata.
@@ -129,7 +133,7 @@ Selezionare l'AMI e cliccare su "Actions" e scegliere l'opzione "Modify Image Pe
 e cliccare su "Add Permission"; infine confermare con "Save".
 
 
-# Connettersi alle istanze
+## Connettersi alle istanze
 
 
 NOTA: Si può fare anche su Windows, basta installare ssh: andare in APP E FUNZIONALITÀ -> GESTISCI FUNZIONALITÀ FACOLTATIVE ->
@@ -143,7 +147,7 @@ Chiudere quest'ultima shell e tornare sulla precedente.
 Impostare sicurezza sulla chiave:
 - chmod 400 /home/ubuntu/.ssh/key.pem
 
-# Modifica Hostnames (ATTENZIONE ## namenode e datanode1 coincidono con namenode in AWS)
+### Modifica Hostnames (ATTENZIONE ## namenode e datanode1 coincidono con namenode in AWS)
 
 - sudo nano /etc/hosts
 Scrivere dentro:
@@ -151,7 +155,7 @@ Scrivere dentro:
 PRIVATE_IP_NAMENODE namenode
 PRIVATE_IP_NAMENODE datanode1
 
-# Configurare SSH
+### Configurare SSH
 - nano /home/ubuntu/.ssh/config
 E scrivere dentro:
 
@@ -165,7 +169,7 @@ User ubuntu
 IdentityFile /home/ubuntu/.ssh/my-key.pem
 
 
-# Aggiornare i package nella macchina e installare Java:
+## Aggiornare i package nella macchina e installare Java:
 - sudo apt-get update && sudo apt-get dist-upgrade
 - sudo apt-get install openjdk-8-jdk
 - wget http://mirror.nohup.it/apache/hadoop/common/hadoop-3.1.3/hadoop-3.1.3.tar.gz
@@ -173,7 +177,7 @@ IdentityFile /home/ubuntu/.ssh/my-key.pem
 - sudo mv ./hadoop-3.1.3 /home/ubuntu/hadoop
 - rm hadoop-3.1.3.tar.gz
 
-# Modificare le variabili d'ambiente
+## Modificare le variabili d'ambiente
 - sudo nano /etc/environment
 
 E scrivere dentro:
@@ -194,7 +198,7 @@ export HADOOP_CONF_DIF=/home/ubuntu/hadoop/etc/hadoop
 
 - source /home/ubuntu/.profile
 
-# Setup Hadoop
+## Setup Hadoop
 Nelle linee di codice successive il tag <configuration> è presente per far capire dove scrivere i valori,
 ma non va riscritto perché è già presente nei file.
 
@@ -285,7 +289,7 @@ w
 IMPORTANTE: Affinché Hadoop funzioni correttamente la sua configurazione dev'essere identica per tutti i nodi, quindi anche i nodi dentro
 il file "workers" soprastante deve essere identico per ogni macchina.
 
-# Configurare Spark
+## Configurare Spark
 - wget https://archive.apache.org/dist/spark/spark-2.4.4/spark-2.4.4-bin-hadoop2.7.tgz
 - tar -xvzf spark-2.4.4-bin-hadoop2.7.tgz
 - sudo mv ./spark-2.4.4-bin-hadoop2.7 /home/ubuntu/spark
@@ -305,15 +309,14 @@ Scrivere dentro:
 
 datanode1
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 A questo punto la guida si divide in 2:
 1) Creazione del cluster manualmente, ovvero creando le altre istanze con l'AMI della prima (o copia manuale) e aggiornando tutti i file di configurazione
    per ogni istanza aggiunta al cluster
 2) Configurazione di Terraform, in modo tale da creare un numero di istanze a piacimento in maniera automatica e creando degli script che aggiornino
    automaticamente i file di configurazione con i dati delle istanze generate da Terraform
-
-I numerosi dash ('-', "trattini") comprendono queste due possibilità, la restante parte di guida spiega l'avvio di Hadoop, di Spark e l'esecuzione
-di un codice tramite spark nel cluster.
 
 
 # Copia AMI (SE VOLETE FARE QUESTO CREERÀ UNO SNAPSHOT CHE SE SUPERA 1GB AVRÀ UN COSTO,
@@ -325,8 +328,7 @@ Scegliere un nome per l'immagine a piacimento e confermare cliccando "Create Ima
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-1)
-# Creazione di una singola istanza con l'immagine manualmente
+# 1. Creazione di una singola istanza con l'immagine manualmente
 
 Andate in Images e cliccare Launch selezionando l'immagine appena creata
 Impostate stessi settaggi
@@ -391,8 +393,7 @@ Aggiornare hadoop workers su datanode2
 
 
 
-2)
-# Configurazione di Terraform
+# 2. Configurazione di Terraform
 
 Scaricare Terraform copiando il link per la versione Linux (nel nostro caso a 64bit) che si può trovare al link
 https://www.terraform.io/downloads.html eseguendo il comando:
@@ -469,7 +470,7 @@ resource "aws_instance" "testInstances" {
 
 Salvare il file.
 
-# Installazione di AWS CLI e creazione delle chiavi di accesso
+## Installazione di AWS CLI e creazione delle chiavi di accesso
 
 A questo punto è necessario installare l'AWS CLI affinché terraform possa accedere e utilizzare le nostre risorse.
 La guida per installare l'AWS CLI si trova al link https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html
@@ -499,7 +500,7 @@ Default output format [None]: json
 Terraform troverà automaticamente le credenziali per accedere alle risorse del nostro account AWS
 
 
-# Utilizzo di terraform 0.12, configurazione finale del cluster e miglioramento configurazione
+## Utilizzo di terraform 0.12, configurazione finale del cluster e miglioramento configurazione
 
 Entra nella cartella di terraform con:
 - cd Terraform
@@ -715,7 +716,7 @@ Quando si distruggeranno le macchine con "terraform destroy" si avvierà lo scri
 che pulirà i file di configurazione di hadoop, spark, degli IP e della configurazione SSH permettendoci quindi
 di poter rieseguire i comandi "init" e "apply" di terraform senza doverci preoccupare di pulire i file di configurazione.
 
-# Descrizione non raffinata dell'utilizzo di Terraform con istanze di account multipli
+## Descrizione non raffinata dell'utilizzo di Terraform con istanze di account multipli
 Se vuoi usare Terraform come appena descritto, ma creare un cluster con istanze di 2 o più account, sarà necessario creare un "falso master"
 negli altri account (viene nominato falso perché "namenode" sarà sempre il master del cluster).
 
