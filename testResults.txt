@@ -1,0 +1,117 @@
+Test 1 (32 instances):
+
+Instance type: r5.large
+Number of instances: 32 (1 namenode, 32 datanodes)
+Python file: testSample.py
+Algorithm type: characters count
+File size: 9.4 GB
+Number of spark executors: 32
+Execution time: 5mins, 1sec
+
+-------------------------------------------------------------------------
+
+Test 2 (16 instances):
+
+Instance type: r5.large
+Number of instances: 16 (1 namenode, 16 datanodes)
+Python file: testSample.py
+Algorithm type: characters count
+File size: 9.4 GB
+Number of spark executors: 16
+Execution time: 7mins, 57sec
+
+-------------------------------------------------------------------------
+
+Test 3 (32 instances):
+
+Instance type: r5.large
+Number of instances: 32 (1 namenode, 32 datanodes)
+Python file: testSample.py
+Algorithm type: characters count
+File size: 2.1 GB
+Number of spark executors: 32
+Execution time: 1mins, 51sec
+
+-------------------------------------------------------------------------
+
+Test 4 (16 instances):
+
+Instance type: r5.large
+Number of instances: 16 (1 namenode, 16 datanodes)
+Python file: testSample.py
+Algorithm type: characters count
+File size: 2.1 GB
+Number of spark executors: 16
+Execution time: 2mins, 8sec
+
+-------------------------------------------------------------------------
+
+Test 5 (12 instances):
+
+Instance type: r5.large
+Number of instances: 12 (1 namenode, 12 datanodes)
+Python file: testSample.py
+Algorithm type: characters count
+File size: 2.1 GB
+Number of spark executors: 12
+Execution time: 3mins, 21sec
+
+-------------------------------------------------------------------------
+
+Test 6 (8 instances):
+
+Instance type: r5.large
+Number of instances: 8 (1 namenode, 8 datanodes)
+Python file: testSample.py
+Algorithm type: characters count
+File size: 2.1 GB
+Number of spark executors: 8
+Execution time: 3mins, 36sec
+
+-------------------------------------------------------------------------
+
+Test 7 (4 instances):
+
+Instance type: r5.large
+Number of instances: 4 (1 namenode, 4 datanodes)
+Python file: testSample.py
+Algorithm type: characters count
+File size: 2.1 GB
+Number of spark executors: 4
+Execution time: 6mins, 35sec
+
+-------------------------------------------------------------------------
+
+Test 8 (2 instances):
+
+Instance type: r5.large
+Number of instances: 2 (1 namenode, 2 datanodes)
+Python file: testSample.py
+Algorithm type: characters count
+File size: 2.1 GB
+Number of spark executors: 2
+Execution time: 12mins, 30sec
+
+-------------------------------------------------------------------------
+
+Test 9 (1 instance con yarn):
+
+Instance type: r5.large
+Number of instances: 1 (1 namenode, 1 datanodes)
+Python file: testSample.py
+Algorithm type: characters count
+File size: 2.1 GB
+Number of spark executors: 1
+Execution time: 24mins, 27sec
+
+-------------------------------------------------------------------------
+
+Test 10 (1 instance con local[*]):
+
+Instance type: r5.large
+Number of instances: 1 (1 namenode, 1 datanodes)
+Python file: testSample.py
+Algorithm type: characters count
+File size: 2.1 GB
+Number of spark executors: 1
+Execution time: 23mins, 59sec
