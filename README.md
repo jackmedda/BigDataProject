@@ -141,8 +141,10 @@ NOTA: Si può fare anche su Windows, basta installare ssh: andare in APP E FUNZI
 
 Connettersi all'istanza col comando:
 - ssh -i key.pem ubuntu@PUBLIC_DNS_ADDRESS  (ex: ssh -i "bigdata.pem" ubuntu@ec2-34-227-83-101.compute-1.amazonaws.com)
+
 Creare un'altra shell e inviare la chiave scaricata da AWS col comando: 
 - scp -i 'key.pem' key.pem ubuntu@PUBLIC_DNS_ADDRESS:/home/ubuntu/.ssh
+
 Chiudere quest'ultima shell e tornare sulla precedente.
 Impostare sicurezza sulla chiave:
 - chmod 400 /home/ubuntu/.ssh/key.pem
@@ -150,6 +152,7 @@ Impostare sicurezza sulla chiave:
 ### Modifica Hostnames (ATTENZIONE ## namenode e datanode1 coincidono con namenode in AWS)
 
 - sudo nano /etc/hosts
+
 Scrivere dentro:
 
 ```
@@ -159,6 +162,7 @@ PRIVATE_IP_NAMENODE datanode1
 
 ### Configurare SSH
 - nano /home/ubuntu/.ssh/config
+
 E scrivere dentro:
 
 ```
@@ -210,6 +214,7 @@ Nelle linee di codice successive il tag <configuration> è presente per far capi
 ma non va riscritto perché è già presente nei file.
 
 - nano $HADOOP_CONF_DIF/hdfs-site.xml
+
 E scrivere dentro:
 
 ```
@@ -230,6 +235,7 @@ E scrivere dentro:
 ```
 
 - nano $HADOOP_CONF_DIF/core-site.xml
+
 E scrivere dentro:
 
 ```
@@ -242,6 +248,7 @@ E scrivere dentro:
 ```
 
 - nano $HADOOP_CONF_DIF/yarn-site.xml
+
 E scrivere dentro:
 
 ```
@@ -266,6 +273,7 @@ E scrivere dentro:
 ```
 
 - nano $HADOOP_CONF_DIF/mapred-site.xml
+
 E scrivere dentro:
 
 ```
@@ -290,6 +298,7 @@ E scrivere dentro:
 ```
 
 - nano $HADOOP_CONF_DIF/masters
+
 Scrivere dentro:
 
 ```
@@ -297,13 +306,13 @@ namenode
 ```
 
 - nano $HADOOP_CONF_DIF/workers
+
 IMPORTANTE: cancellare localhost (dato che datanode1 conterrà lo stesso valore, localhost e datanode1 insieme NO, uno dei due)
 Scrivere dentro:
 
 ```
 datanode1
 ```
-
 
 IMPORTANTE: Affinché Hadoop funzioni correttamente la sua configurazione dev'essere identica per tutti i nodi, quindi anche i nodi dentro
 il file "workers" soprastante deve essere identico per ogni macchina.
@@ -315,6 +324,7 @@ il file "workers" soprastante deve essere identico per ogni macchina.
 - rm spark-2.4.4-bin-hadoop2.7.tgz
 - sudo cp spark/conf/spark-env.sh.template spark/conf/spark-env.sh
 - sudo nano spark/conf/spark-env.sh
+
 Scrivere dentro:
 
 ```
@@ -326,6 +336,7 @@ export PYSPARK_PYTHON="/usr/bin/python3"
 Creare il file "slaves" per avviare tutti gli slaves con unico comando:
 
 - nano spark/conf/slaves
+
 Scrivere dentro:
 
 ```
@@ -359,15 +370,14 @@ Scegliere la stessa Key Pair
 
 NOME NUOVA ISTANZA SU EC2: 'datanode2'
 
-SEMPRE SUL MASTER
-| | | | | | | | | | | |
-v v v v v v v v v v v v
+I SUCCESSIVI PASSI SEMPRE SUL MASTER
 
 A questo punto bisogna aggiornare il file /etc/hosts su entrambe le macchine,
 ma per adesso modificheremo solo i file di namenode, poi si capirà il motivo.
 Quindi eseguire il comando:
 
 - sudo nano /etc/hosts
+
 Aggiungere dentro:
 
 ```
@@ -378,6 +388,7 @@ PRIVATE_IP_DATANODE2 datanode2
 
 Successivamente modificare la configurazione SSH:
 - nano /home/ubuntu/.ssh/config
+
 E aggiungere dentro:
 
 ```
@@ -389,6 +400,7 @@ IdentityFile /home/ubuntu/.ssh/my-key.pem
 
 Poi modificare i workers di hadoop:
 - nano $HADOOP_CONF_DIF/workers
+
 E aggiungere dentro:
 
 ```
@@ -397,6 +409,7 @@ datanode2
 
 Infine SOLO SUL MASTER aggiungere datanode2:
 - nano spark/conf/slaves
+
 E aggiungere dentro:
 
 ```
@@ -454,6 +467,7 @@ Aggiungiamo alle variabili d'ambiente anche terraform. Eseguire i passaggi:
 
 A questo punto possiamo usare terraform in qualsiasi cartella, basterà eseguire:
 - terraform
+
 E vedremo l'output che ci mostra tutti i comandi.
 
 Creiamo il file di configurazione per terraform:
@@ -777,6 +791,7 @@ Il prossimo passo è copiare i file di configurazione di "datanode17" in "nameno
 - cat /home/ubuntu/.ssh/config | ssh namenode "sudo sh -c ’cat >/home/ubuntu/.ssh/config’"        ( per aggiornare SSH config )
 - cat /home/ubuntu/hadoop/etc/hadoop/workers | ssh namenode "sudo sh -c ’cat >/home/ubuntu/hadoop/etc/hadoop/workers’"  ( per aggiornare workers )
 - cat /home/ubuntu/spark/conf/slaves | ssh namenode "sudo sh -c ’cat >/home/ubuntu/spark/conf/slaves’"  ( per aggiornare slaves )
+
 Dopo questo passaggio bisogna tornare alla shell del master (namenode). Qui dobbiamo eseguire "terraform init" e "terraform apply".
 
 L'ultimo passo è eseguire lo script updateDatanode.sh, ma bisogna usare l'INDEX_START minore tra i due, tra quello di "namenode" e quello di "datanode17"
@@ -835,6 +850,7 @@ HINT: usare il comando rapido 'jps' che mostra i processi della JVM (quindi Hado
 
 Esiste anche il comando:
 - start-all.sh
+
 ma Hadoop consiglia di utilizzare i due comandi sopra citati per avviare hdfs e yarn
 
 Gli stessi possono essere stoppati con i comandi:
