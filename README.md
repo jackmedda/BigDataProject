@@ -832,3 +832,19 @@ Poi entrare sul sito web:
 Dalla porta 8080 si potranno visualizzare le macchine avviate per spark e altre informazioni.
 Dalla porta 8088 potremmo analizzare pienamente lo stato delle applicazioni avviate con spark, e quindi è l'interfaccia migliore da utilizzare
 per vedere errori incontrati durante l'esecuzione, se l'applicazione è andata a buon fine, tempi di esecuzione ecc.
+
+
+# TESTING
+
+Test | Instance Type | N. Instances | File Size | N. Executors | Execution Time
+---- | ------------- | ------------ | --------- | ------------ | -------------- 
+1 | r5.large | 32 | 9.4 GB | 32 | 5mins, 1sec
+2 | r5.large | 16 | 9.4 GB | 16 | 7mins, 57sec
+3 | r5.large | 32 | 2.1 GB | 32 | 1mins, 51sec
+4 | r5.large | 16 | 2.1 GB | 16 | 2mins, 8sec
+5 | r5.large | 12 | 2.1 GB | 12 | 3mins, 21sec
+6 | r5.large | 8 | 2.1 GB | 8 | 3mins, 36sec
+7 | r5.large | 4 | 2.1 GB | 4 | 6mins, 35sec
+8 | r5.large | 2 | 2.1 GB | 2 | 12mins, 30sec
+9 | r5.large | 1 (YARN) | 2.1 GB | 1 | 24mins, 27sec
+10 | r5.large | 1 (local[*]) | 2.1 GB | 1 | 23mins, 59sec
